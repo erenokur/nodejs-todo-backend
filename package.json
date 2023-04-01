@@ -1,0 +1,22 @@
+{
+  "name": "erenokurtodo",
+  "version": "1.0.0",
+  "description": "FoodStyles technical challenge backend project",
+  "main": "src",
+  "scripts": {
+    "development": "nodemon src",
+    "start": "node src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "eren okur",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3"
+  }
+}
