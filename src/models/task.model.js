@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-// I dont want to remove a task so I only change status and modifyDate of an entry
-const Taskschema = mongoose.Schema({
+// I don't want to remove a task so I only change status and modifyDate of an entry
+const taskSchema = mongoose.Schema({
     userId: {
         type: String,
         required: true,
@@ -26,5 +26,5 @@ const Taskschema = mongoose.Schema({
     }
 });
 
-const Task = mongoose.model("Task", Taskschema);
+const Task = mongoose.model("Task", taskSchema);
 module.exports = Task;
