@@ -1,14 +1,14 @@
 {
-  "name": "erenokurtodo",
+  "name": "nodejs-todo-backend",
   "version": "1.0.0",
-  "description": "FoodStyles technical challenge backend project",
+  "description": "nodejs-todo-backend",
   "main": "src",
   "scripts": {
     "development": "nodemon src",
     "start": "node src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "eren okur",
+  "author": "Eren OKUR",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
