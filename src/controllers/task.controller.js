@@ -1,18 +1,16 @@
 const db = require("../models");
 const Task = db.task;
 
-exports.getTasks = (req, res) => {
-  Task.find({
-    userId: req.userId,
-    active: true,
-  })
-    .then((tasks) => {
-      res.send({ data: tasks });
-      return;
-    })
-    .catch((err) => {
-      res.status(500).send({ message: "Task find error " + err });
-    });
+exports.getTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({
+      userId: req.userId,
+      active: true,
+    }).exec();
+    res.send({ data: tasks });
+  } catch (err) {
+    res.status(500).send({ message: "Task find error " + err });
+  }
 };
 
 exports.markDone = (req, res) => {

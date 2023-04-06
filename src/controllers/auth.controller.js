@@ -1,74 +1,68 @@
 const db = require("../models");
 const User = db.user;
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
-
-exports.register = (req, res) => {
-    let givenUsername = req.body.username;
-    let givenMail = req.body.email;
-    let givenPass = req.body.password;
+exports.register = async (req, res) => {
+  try {
+    const givenUsername = req.body.username;
+    const givenMail = req.body.email;
+    const givenPass = req.body.password;
     if (givenUsername && givenMail && givenPass) {
-        const user = new User({
-            username: givenUsername,
-            email: givenMail,
-            password: bcrypt.hashSync(givenPass, 8)
-        });
-        user.save().then((user) => {
-            res.send({ message: "User registered successfully!" });
-        }).catch(err => {
-            res.status(500).send({ message: "User find error " + err });
-            return;
-        });
+      const user = new User({
+        username: givenUsername,
+        email: givenMail,
+        password: bcrypt.hashSync(givenPass, 8),
+      });
+      await user.save();
+      res.send({ message: "User registered successfully!" });
     } else {
-        res.status(500).send({ message: "Missing info given " });
-        return;
+      res.status(500).send({ message: "Missing info given" });
+    }
+  } catch (err) {
+    res.status(500).send({ message: "User find error " + err });
+  }
+};
+
+exports.getUserData = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).exec();
+    res.send({ username: user.username });
+  } catch (err) {
+    res.status(500).send({ message: "Missing info given" });
+  }
+};
+
+exports.login = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email }).exec();
+    if (!user) {
+      return res.status(404).send({ message: "User Not found." });
     }
 
-};
+    const passwordIsValid = bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid Password!",
+      });
+    }
 
-exports.getuserdata = (req, res) => {
+    const token = jwt.sign({ id: user.id }, process.env.SECRET_TOKEN, {
+      expiresIn: "24H", // 24 hours
+    });
 
-    User.findById(
-        req.userId
-    ).then((user) => {
-        res.send({
-            username: user.username,
-        });
-    }).catch((err) => {
-        res.status(500).send({ message: "Missing info given " });
-    })
-};
-
-exports.login = (req, res) => {
-    User.findOne({
-        email: req.body.email
-    }).then((user) => {
-        if (!user) {
-            return res.status(404).send({ message: "User Not found." });
-        }
-        var passwordIsValid = bcrypt.compareSync(
-            req.body.password,
-            user.password
-        );
-        if (!passwordIsValid) {
-            return res.status(401).send({
-                accessToken: null,
-                message: "Invalid Password!"
-            });
-        }
-        var token = jwt.sign({ id: user.id }, process.env.SECRET_TOKEN, {
-            expiresIn: 86400 // 24 hours
-        });
-        res.status(200).send({
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            accessToken: token
-        });
-    }).catch(err => {
-        res.status(500).send({ message: "User find error " + err });
-        return;
-    });;
+    res.status(200).send({
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      accessToken: token,
+    });
+  } catch (err) {
+    next("User find error " + err);
+  }
 };
