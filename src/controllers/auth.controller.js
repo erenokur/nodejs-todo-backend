@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
       res.status(500).send({ message: "Missing info given" });
     }
   } catch (err) {
-    res.status(500).send({ message: "User find error " + err });
+    next(err);
   }
 };
 
@@ -30,7 +30,7 @@ exports.getUserData = async (req, res) => {
     const user = await User.findById(req.userId).exec();
     res.send({ username: user.username });
   } catch (err) {
-    res.status(500).send({ message: "Missing info given" });
+    next(err);
   }
 };
 
@@ -38,7 +38,10 @@ exports.login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).exec();
     if (!user) {
-      return res.status(404).send({ message: "User Not found." });
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid email and password combination.",
+      });
     }
 
     const passwordIsValid = bcrypt.compareSync(
@@ -48,7 +51,7 @@ exports.login = async (req, res, next) => {
     if (!passwordIsValid) {
       return res.status(401).send({
         accessToken: null,
-        message: "Invalid Password!",
+        message: "Invalid email and password combination.",
       });
     }
 
@@ -63,6 +66,6 @@ exports.login = async (req, res, next) => {
       accessToken: token,
     });
   } catch (err) {
-    next("User find error " + err);
+    next(err);
   }
 };

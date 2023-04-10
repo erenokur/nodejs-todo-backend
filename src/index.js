@@ -36,6 +36,14 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.send({
+    error: {
+      message: err.message,
+    },
+  });
+});
 app.get("/", (req, res) => {
   res.json({ message: "Server active." });
 });
