@@ -12,6 +12,6 @@ router.post(
   controller.register
 );
 
-router.get("/getuserdata", [authCheck.verifyToken], controller.getUserData);
+router.get("/getUserData", [authCheck.verifyToken], controller.getUserData);
 
 module.exports = router;
