@@ -42,14 +42,16 @@ SECRET_TOKEN=your-jwt-secret
 
 ## API Endpoints
 
-> GET /api/task/getTasks: Get all tasks
-> POST /api/task/markDone:id: Mark task completed
-> POST /api/task/markUnDone:id: Mark task not completed
-> POST /api/task/activateTask:id: Delete task
-> POST /api/task/deActivateTask:id: Bring back deleted task
-> POST /api/task/createTask:title: Create new task
-> POST /api/auth/register: Sign up a new user
-> POST /api/auth/login: Sign in an existing user
+```
+ GET /api/task/getTasks: Get all tasks
+ POST /api/task/markDone:id: Mark task completed
+ POST /api/task/markUnDone:id: Mark task not completed
+ POST /api/task/activateTask:id: Delete task
+ POST /api/task/deActivateTask:id: Bring back deleted task
+ POST /api/task/createTask:title: Create new task
+ POST /api/auth/register: Sign up a new user
+ POST /api/auth/login: Sign in an existing user
+```
 
 ## Authentication
 
