@@ -1,16 +1,19 @@
 const db = require("../models");
 const Task = db.task;
 
-exports.getTasks = async (req, res, next) => {
+const sendTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find({
       userId: req.userId,
       active: true,
     }).exec();
-    return res.send({ data: tasks });
+    return res.status(200).send({ data: tasks });
   } catch (err) {
     next(err);
   }
+};
+exports.getTasks = async (req, res, next) => {
+  await sendTasks(req, res, next);
 };
 
 const updateTask = (prop, value) => (req, res, next) => {
@@ -29,7 +32,8 @@ const updateTask = (prop, value) => (req, res, next) => {
       if (!task) {
         return res.status(400).send({ message: "Task find error " });
       }
-      return res.status(200).send(task);
+      // Get all tasks and send them as a response
+      sendTasks(req, res, next);
     })
     .catch(next);
 };
