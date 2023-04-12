@@ -57,7 +57,7 @@ exports.createTask = async (req, res, next) => {
       title: title,
     });
     await task.save();
-    return res.send({ message: "Task created successfully!" });
+    sendTasks(req, res, next);
   } catch (err) {
     next();
   }
